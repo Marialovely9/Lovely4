@@ -1,0 +1,33 @@
+double fib(unsigned n)
+{
+  static const unsigned N = 1500;
+  thread_local static double value[N] = { 0., 1. };
+  thread_local static bool stored[N] = { true, true };
+
+  if (N <= n)
+    return HUGE_VAL;
+  
+  if (stored[n])
+    return value[n];
+
+  stored[n] = true;
+  return value[n] = fib(n - 1) + fib(n - 2);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Проверочный код.
+
+// Вариант fib, не использующий глобальную память.
+// Используется для тестирования варианта fib, приведённого выше.
+double reference_fib(unsigned n)
+{
+  double a = 0., b = 1.;
+  while (n--)
+  {
+    const auto sum = a + b;
+    a = b;
+    b = sum;
+  }
+  return a;
+}
